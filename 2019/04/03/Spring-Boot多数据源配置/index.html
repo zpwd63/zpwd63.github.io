@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+  <title>Spring Boot多数据源配置 | 夜凉月微扬</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+    <meta name="keywords" content="夜凉月微扬">
+  
+  <meta name="description" content="Spring Boot多数据源配置 在生产环境中，可能存在同一个项目访问多个数据源的情况，本文通过Spring Boot实现多数据源数据操作。为开发示例简单，采用JPA进行数据库操作；配置文件采用yml进行配置，数据源为两个不同名的MySQL数据库。同时为示例简单，配置信息我们只添加必要的配置，其他配置将省略。        一、单数据库操作示例 通过Spring Boot实现单数据源操作比较简单">
+<meta name="keywords" content="Spring Boot">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spring Boot多数据源配置">
+<meta property="og:url" content="http:/whucke.com/2019/04/03/Spring-Boot多数据源配置/index.html">
+<meta property="og:site_name" content="夜凉月微扬">
+<meta property="og:description" content="Spring Boot多数据源配置 在生产环境中，可能存在同一个项目访问多个数据源的情况，本文通过Spring Boot实现多数据源数据操作。为开发示例简单，采用JPA进行数据库操作；配置文件采用yml进行配置，数据源为两个不同名的MySQL数据库。同时为示例简单，配置信息我们只添加必要的配置，其他配置将省略。        一、单数据库操作示例 通过Spring Boot实现单数据源操作比较简单">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-04-03T08:35:46.529Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Spring Boot多数据源配置">
+<meta name="twitter:description" content="Spring Boot多数据源配置 在生产环境中，可能存在同一个项目访问多个数据源的情况，本文通过Spring Boot实现多数据源数据操作。为开发示例简单，采用JPA进行数据库操作；配置文件采用yml进行配置，数据源为两个不同名的MySQL数据库。同时为示例简单，配置信息我们只添加必要的配置，其他配置将省略。        一、单数据库操作示例 通过Spring Boot实现单数据源操作比较简单">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="/js/pace.min.js"></script>
+  
+
+  
+  
+
+</head>
+</html>
+<body>
+  <div id="container">
+      <header id="header">
+    <div id="banner"></div>
+    <div id="header-outer">
+        <div id="header-menu" class="header-menu-pos animated">
+            <div class="header-menu-container">
+                <a href="/" class="left">
+                    <span class="site-title">夜凉月微扬</span>
+                </a>
+                <nav id="header-menu-nav" class="right">
+                    
+                    <a href="/">
+                        <i class="fa fa-home"></i>
+                        <span>首页</span>
+                    </a>
+                    
+                    <a href="/archives">
+                        <i class="fa fa-archive"></i>
+                        <span>档案</span>
+                    </a>
+                    
+                    <a href="/about">
+                        <i class="fa fa-user"></i>
+                        <span>About</span>
+                    </a>
+                    
+                </nav>
+                <a class="mobile-header-menu-button">
+                    <i class="fa fa-bars"></i>
+                </a>
+            </div>
+        </div>
+        <div id="header-row">
+            <div id="logo">
+                <a href="/">
+                    <img src="/images/logo.png" alt="logo">
+                </a>
+            </div>
+            <div class="header-info">
+                <div id="header-title">
+                    
+                    <h2>
+                        夜凉月微扬
+                    </h2>
+                    
+                </div>
+                <div id="header-description">
+                    
+                    <h3>
+                        一个专注 WEB 开发的技术博客
+                    </h3>
+                    
+                </div>
+            </div>
+            <nav class="header-nav">
+                <div class="social">
+                    
+                        <a title="夜凉月微扬" target="_blank" href="//www.whucke.com">
+                            <i class="fa fa-home fa-2x"></i></a>
+                    
+                        <a title="Github" target="_blank" href="//github.com">
+                            <i class="fa fa-github fa-2x"></i></a>
+                    
+                        <a title="Weibo" target="_blank" href="//weibo.com">
+                            <i class="fa fa-weibo fa-2x"></i></a>
+                    
+                        <a title="Twitter" target="_blank" href="//twitter.com">
+                            <i class="fa fa-twitter fa-2x"></i></a>
+                    
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+      <div class="outer">
+        <section id="main" class="body-wrap"><article id="post-Spring-Boot多数据源配置" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="post-title" itemprop="name">
+      Spring Boot多数据源配置
+    </h1>
+    <div class="post-title-bar">
+      <ul>
+          
+        <li>
+          <i class="fa fa-calendar"></i>  2019-04-03
+        </li>
+        <li>
+          <i class="fa fa-eye"></i>
+          <span id="busuanzi_value_page_pv"></span>
+        </li>
+      </ul>
+    </div>
+  
+
+          
+      </header>
+    
+    <div class="article-entry post-content" itemprop="articleBody">
+      
+            
+            <h3 id="Spring-Boot多数据源配置"><a href="#Spring-Boot多数据源配置" class="headerlink" title="Spring Boot多数据源配置"></a>Spring Boot多数据源配置</h3><blockquote>
+<p>在生产环境中，可能存在同一个项目访问多个数据源的情况，本文通过Spring Boot实现多数据源数据操作。为开发示例简单，采用JPA进行数据库操作；配置文件采用yml进行配置，数据源为两个不同名的MySQL数据库。同时为示例简单，配置信息我们只添加必要的配置，其他配置将省略。      </p>
+</blockquote>
+<h4 id="一、单数据库操作示例"><a href="#一、单数据库操作示例" class="headerlink" title="一、单数据库操作示例"></a>一、单数据库操作示例</h4><blockquote>
+<p>通过Spring Boot实现单数据源操作比较简单，只需要按照Spring Boot的约定进行配置即可，具体配置如下：  </p>
+</blockquote>
+<pre><code class="yml"><span class="attr">spring:</span>
+<span class="attr">  datasource:</span>
+<span class="attr">    hikari:</span>
+<span class="attr">      driver-class-name:</span> <span class="string">com.mysql.cj.jdbc.Driver</span>
+<span class="attr">      username:</span> <span class="string">root</span>
+<span class="attr">      password:</span> <span class="string">root</span>
+<span class="attr">    url:</span> <span class="attr">jdbc:mysql://127.0.0.1:3306/test1?serverTimezone=UTC</span>
+</code></pre>
+<p>这里只配置数据库连接的必备信息，通过默认的配置方式，Spring Boot在启动时会直接加载这些必要信息。    </p>
+<p><strong>其他一些辅助测试的代码如下:</strong>   </p>
+<ul>
+<li>User</li>
+</ul>
+<pre><code class="java"><span class="comment">/**</span>
+<span class="comment"> * 用户信息</span>
+<span class="comment"> *</span>
+<span class="comment"> * <span class="doctag">@author</span> zhang peng</span>
+<span class="comment"> * <span class="doctag">@since</span> 2019/3/6 10:12</span>
+<span class="comment"> */</span>
+<span class="meta">@Entity</span>
+<span class="meta">@Table</span>(name = <span class="string">"user"</span>)
+<span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">User</span> </span>{
+
+    <span class="meta">@Id</span>
+    <span class="meta">@GeneratedValue</span>
+    <span class="keyword">private</span> Integer id;
+
+    <span class="keyword">private</span> String name;
+
+    <span class="keyword">private</span> <span class="keyword">int</span> age;
+
+    <span class="comment">//省略getter setter</span>
+}
+
+</code></pre>
+<ul>
+<li>Repository  </li>
+</ul>
+<pre><code class="java"><span class="comment">/**</span>
+<span class="comment"> * User Repository</span>
+<span class="comment"> *</span>
+<span class="comment"> * <span class="doctag">@author</span> zhang peng</span>
+<span class="comment"> * <span class="doctag">@since</span> 2019/3/6 10:13</span>
+<span class="comment"> */</span>
+<span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">UserRepository</span> <span class="keyword">extends</span> <span class="title">JpaRepository</span>&lt;<span class="title">User</span>, <span class="title">Integer</span>&gt; </span>{
+}
+</code></pre>
+<ul>
+<li>Service 、Service Impl   </li>
+</ul>
+<pre><code class="java"><span class="comment">/**</span>
+<span class="comment"> * User Service Interface</span>
+<span class="comment"> *</span>
+<span class="comment"> * <span class="doctag">@author</span> zhang peng</span>
+<span class="comment"> * <span class="doctag">@since</span> 2019/3/6 10:15</span>
+<span class="comment"> */</span>
+<span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">IUserService</span> </span>{
+
+    <span class="function">User <span class="title">save</span><span class="params">(User user)</span></span>;
+
+    <span class="function">User <span class="title">save</span><span class="params">(String name, Integer age)</span></span>;
+}
+</code></pre>
+<pre><code class="java"><span class="comment">/**</span>
+<span class="comment"> * User Service Interface Impl</span>
+<span class="comment"> *</span>
+<span class="comment"> * <span class="doctag">@author</span> zhang peng</span>
+<span class="comment"> * <span class="doctag">@since</span> 2019/3/6 10:16</span>
+<span class="comment"> */</span>
+<span class="meta">@Service</span>
+<span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserServiceImpl</span> <span class="keyword">implements</span> <span class="title">IUserService</span> </span>{
+
+    <span class="meta">@Autowired</span>
+    <span class="keyword">private</span> UserRepository userRepository;
+
+    <span class="meta">@Override</span>
+    <span class="function"><span class="keyword">public</span> User <span class="title">save</span><span class="params">(User user)</span> </span>{
+        <span class="keyword">return</span> userRepository.save(user);
+    }
+
+    <span class="meta">@Override</span>
+    <span class="meta">@Transactional</span>
+    <span class="function"><span class="keyword">public</span> User <span class="title">save</span><span class="params">(String name, Integer age)</span> </span>{
+        User user = <span class="keyword">new</span> User();
+        user.setName(name);
+        user.setAge(age);
+        <span class="keyword">return</span> save(user);
+    }
+}
+
+</code></pre>
+<ul>
+<li>Controller   </li>
+</ul>
+<pre><code class="java"><span class="comment">/**</span>
+<span class="comment"> * User Controller</span>
+<span class="comment"> *</span>
+<span class="comment"> * <span class="doctag">@author</span> zhang peng</span>
+<span class="comment"> * <span class="doctag">@since</span> 2019/3/6 10:18</span>
+<span class="comment"> */</span>
+<span class="meta">@RestController</span>
+<span class="meta">@RequestMapping</span>(<span class="string">"/user"</span>)
+<span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserController</span> </span>{
+
+    <span class="meta">@Autowired</span>
+    <span class="keyword">private</span> IUserService userService;
+
+    <span class="meta">@RequestMapping</span>(value = <span class="string">"/save"</span>)
+    <span class="function"><span class="keyword">public</span> Object <span class="title">saveUser</span><span class="params">(String name, Integer age)</span> </span>{
+        User user = userService.save(name, age);
+        <span class="keyword">return</span> user.getId();
+    }
+}
+</code></pre>
+<p>以上就是整个从控制层到数据库存储的所有代码，在仅仅考虑简单数据库操作的情况下，利用Spring Boot实现起来非常简单，这也是它作为一个快速开发框架的优势所在。     </p>
+<h4 id="二、多数据源配置"><a href="#二、多数据源配置" class="headerlink" title="二、多数据源配置"></a>二、多数据源配置</h4><p><strong>1、自定义配置信息读取</strong>   </p>
+<blockquote>
+<p>Spring Boot以契约模式简化了项目的配置。如果我们需要配置应用参数，可以用过指定的配置文件<code>application.yml</code>或者<code>application.properties</code>进行配置。而在这里配置的信息我们可以使用spring提供的默认key进行配置，这样spring在启动的时候会帮我们自动加载这些配置信息。同时，除了这些约定好的配置key，我们也可以自定义自己的key进行配置，并通过配置类进行配置信息的加载。     </p>
+</blockquote>
+<p>在多数据源配置类中，我们需要配置<code>DataSource</code>、<code>EntityManagerFactory</code>、<code>PlatformTransactionManager</code>等信息。在单个数据源中，虽然没有明确编码配置，实际上是Spring Boot已经做了默认处理，而在多数据源中，需要根据不同的数据源进行配置。本文数据源均采用MySQL，只是数据库名称不一样，所以在两个数据源配置上基本一样，只是实例名称不同而已，而不同的数据库可能存在一些细节的处理，这些是要注意的。    </p>
+<p>在从单数据源转到多数据源之前，我们需要了解一些Spring Boot的注解相关特性，以方便我们更好的理解和运用这些特性（此处指说明注解用到的特性，其他特性参考官方文档）。   </p>
+<p><strong><code>@Configuration</code></strong>  </p>
+<blockquote>
+<p>类注解，被该注解修饰的类Spring在加载的时候认为该类是一个配置类。   </p>
+</blockquote>
+<p><strong><code>@Bean</code></strong>   </p>
+<blockquote>
+<p>方法注解，被该注解修饰的方法返回的bean对象被Spring接收管理。本示例会用到<code>name</code>属性，该属性用于定义bean别名。    </p>
+</blockquote>
+<p><strong><code>ConfigurationProperties</code></strong>   </p>
+<blockquote>
+<p>方法注解，被该注解修饰的方法可以通过注解过去配置属性。本示例会用到<code>prefix</code>属性，该属性用于描述配置文件中自定义key的前缀信息。   </p>
+</blockquote>
+<p><strong><code>@EnableJpaRepositories</code></strong>  </p>
+<blockquote>
+<p>类注解，该注解用于描述Jpa数据库操作信息。本示例会用到<code>entityManagerFactoryRef</code>、<code>transactionManagerRef</code>、<code>basePackages</code>属性，属性详细说明见下文代码注释。   </p>
+</blockquote>
+<p>此外，如果用到事务，还需要关注一个注解：<code>@Transactional</code> ，在多数据源配置中，由于每个数据库都会配置自己的事务管理器，因为Spring管理这多个事务管理器，在操作数据库需要事务时，Spring并不知道需要使用哪个事务管理器进行事务管理，所以在使用事务时，我们需要通过该注解的<code>transactionManager</code>属性进行事务管理器的指定。由于本文主要是讲多数据源配置，并不关心事务，所以在此简单提示一下，避免按照此示例测试时出现事务配置问题。    </p>
+<p><strong>2、示例代码：</strong>    </p>
+<ul>
+<li>application.yml  </li>
+</ul>
+<pre><code class="yml"><span class="attr">data:</span>
+<span class="attr">  source:</span>
+<span class="attr">    first:</span>
+<span class="attr">      jdbc-url:</span> <span class="attr">jdbc:mysql://127.0.0.1:3306/test1?serverTimezone=UTC</span>
+<span class="attr">      driver-class-name:</span> <span class="string">com.mysql.cj.jdbc.Driver</span>
+<span class="attr">      username:</span> <span class="string">root</span>
+<span class="attr">      password:</span> <span class="string">root</span>
+
+<span class="attr">    second:</span>
+<span class="attr">      jdbc-url:</span> <span class="attr">jdbc:mysql://127.0.0.1:3306/test2?serverTimezone=UTC</span>
+<span class="attr">      driver-class-name:</span> <span class="string">com.mysql.cj.jdbc.Driver</span>
+<span class="attr">      username:</span> <span class="string">root</span>
+<span class="attr">      password:</span> <span class="string">root</span>
+
+</code></pre>
+<p>配置文件配置了两个数据源，分别指向不同的MySQL数据库。其中需要注意，在自定义配置信息key的时候应该保持key的规律，方便后期在获取值的时候有规律可循。上述配置中，我们把<code>data.source</code>作为前缀。     </p>
+<blockquote>
+<p>配置中由于存在两个数据源（也可以更多），所以在定义配置类时，需要多个配置类和数据源信息做对应。本示例中会有两个配置类针对数据源信息，同时为了代码清晰，还会多出一个配置类专门处理数据源共有的配置信息。    </p>
+</blockquote>
+<ul>
+<li><p>数据源一配置<br><code>`</code>java<br>/**</p>
+<ul>
+<li>First DataSource Configuration<br>*</li>
+<li>@author zhang peng</li>
+<li><p>@since 2019/3/6 13:36<br>*/<br>@Configuration<br>@EnableJpaRepositories(</p>
+<pre><code>entityManagerFactoryRef = &quot;firstEntityManagerFactory&quot;,  //EntityManagerFactory信息配置
+transactionManagerRef = &quot;firstTransactionManager&quot;, //事务管理器
+basePackages = {&quot;com.whucke.multi.datasource.repository.first&quot;}) //扫描包定义。同样，为方便使用，在定义包名时也需要遵循一定规律
+</code></pre><p>public class FirstConfig {</p>
+<p>@Autowired<br>private DataSource firstDataSource;<br>@Autowired<br>JpaVendorAdapter jpaVendorAdapter;</p>
+<p>/**</p>
+<ul>
+<li>firstDataSource<br>*</li>
+<li>@return<br>*/<br>@Bean(name = “firstDataSource”)<br>@ConfigurationProperties(prefix = “data.source.first”) //定义配置信息前缀，这也是前面为什么说key的定义需要遵循一定的规律<br>public DataSource firstDataSource() {<br> //通过该方法调用，Spring会自动装配配置信息<br> DataSource dataSource = DataSourceBuilder.create().build();<br> return dataSource;<br>}</li>
+</ul>
+<p>/**</p>
+<ul>
+<li>配置 EntityManagerFactory<br>*</li>
+<li><p>@return<br>*/<br>@Bean(“firstEntityManagerFactory”)<br>public EntityManagerFactory entityManagerFactory() {<br> LocalContainerEntityManagerFactoryBean factoryBean = new LocalContainerEntityManagerFactoryBean();<br> factoryBean.setDataSource(firstDataSource());<br> factoryBean.setJpaVendorAdapter(jpaVendorAdapter);<br> factoryBean.setPackagesToScan(“com.whucke.multi.datasource.domain”);<br> //持久层名称定义，在配置多数据源时必须配置该信息<br> factoryBean.setPersistenceUnitName(“first”);<br> factoryBean.afterPropertiesSet();<br> return factoryBean.getObject();<br>}</p>
+<p>/**</p>
+</li>
+<li>事务管理器<br>*</li>
+<li>@return<br>*/<br>@Bean(“firstTransactionManager”)<br>public PlatformTransactionManager transactionManager() {<br> return new JpaTransactionManager(entityManagerFactory());<br>}</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>}</p>
+<pre><code>
+第二个数据源配置与第一个类似，唯一区别在于bean名称的定义和引用，在配置时需要注意，不要把bean名称配置混淆了。代码如下：     
+
+- 数据源二配置    
+```java
+/**
+ * Second DataSource Configuration
+ *
+ * @author zhang peng
+ * @since 2019/3/6 13:36
+ */
+@Configuration
+@EnableJpaRepositories(
+        entityManagerFactoryRef = &quot;secondEntityManagerFactory&quot;,
+        transactionManagerRef = &quot;secondTransactionManager&quot;,
+        basePackages = {&quot;com.whucke.multi.datasource.repository.second&quot;})
+public class SecondConfig {
+
+    @Autowired
+    private DataSource secondDataSource;
+    @Autowired
+    JpaVendorAdapter jpaVendorAdapter;
+
+    /**
+     * secondDataSource
+     *
+     * @return
+     */
+    @Bean(name = &quot;secondDataSource&quot;)
+    @ConfigurationProperties(prefix = &quot;data.source.second&quot;)
+    public DataSource secondDataSource() {
+        DataSource dataSource = DataSourceBuilder.create().build();
+        return dataSource;
+    }
+
+    /**
+     * 配置 EntityManagerFactory
+     *
+     * @return
+     */
+    @Bean(&quot;secondEntityManagerFactory&quot;)
+    public EntityManagerFactory entityManagerFactory() {
+        LocalContainerEntityManagerFactoryBean factoryBean = new LocalContainerEntityManagerFactoryBean();
+        factoryBean.setDataSource(secondDataSource());
+        factoryBean.setJpaVendorAdapter(jpaVendorAdapter);
+        factoryBean.setPackagesToScan(&quot;com.whucke.multi.datasource.domain&quot;);
+        factoryBean.setPersistenceUnitName(&quot;second&quot;);
+        factoryBean.afterPropertiesSet();
+        return factoryBean.getObject();
+    }
+
+    @Bean(&quot;secondTransactionManager&quot;)
+    public PlatformTransactionManager transactionManager() {
+        return new JpaTransactionManager(entityManagerFactory());
+    }
+
+}
+
+</code></pre><p>前面我们说到会有一个针对数据源的公共配置信息类存在，在本示例中公共配置信息并不多，可能在不同的项目场景下配置信息还会有增加或修改，这需要根据项目的实际情况做处理。   </p>
+<ul>
+<li><p>数据源公共配置信息     </p>
+<pre><code class="java"><span class="comment">/**</span>
+<span class="comment">* Data Source Configuration</span>
+<span class="comment">*</span>
+<span class="comment">* <span class="doctag">@author</span> zhang peng</span>
+<span class="comment">* <span class="doctag">@since</span> 2019/3/6 10:26</span>
+<span class="comment">*/</span>
+<span class="meta">@Configuration</span>
+<span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DataSourceConfig</span> </span>{
+
+  <span class="meta">@Bean</span>
+  <span class="function"><span class="keyword">public</span> JpaVendorAdapter <span class="title">jpaVendorAdapter</span><span class="params">()</span> </span>{
+      HibernateJpaVendorAdapter jpaVendorAdapter = <span class="keyword">new</span> HibernateJpaVendorAdapter();
+      jpaVendorAdapter.setShowSql(<span class="keyword">true</span>);
+      jpaVendorAdapter.setGenerateDdl(<span class="keyword">true</span>);
+      jpaVendorAdapter.setDatabase(Database.MYSQL);
+      <span class="keyword">return</span> jpaVendorAdapter;
+  }
+}
+</code></pre>
+<p>此处对<code>JpaVendorAdapter</code>的配置是直接通过硬编码实现的。如果参数较多、不同数据源等情况，这段代码也可以根据不同的数据源进行配置加载。此处只为说明问题，所以不再引申更多内容。    </p>
+</li>
+</ul>
+<h4 id="三、事务"><a href="#三、事务" class="headerlink" title="三、事务"></a>三、事务</h4><p>最后简单提说一下上文提到的事务管理配置信息。由于真实开发环境中多数据源事务很少直接通过上文配置的事务管理器去处理，所以这里只做简单的说明，需要实现真正的跨数据库事务，还需要用到其他技术才行。      </p>
+<ul>
+<li>示例：   <pre><code class="java"><span class="meta">@Transactional</span>(transactionManager = <span class="string">"firstTransactionManager"</span>)
+<span class="function"><span class="keyword">public</span> User <span class="title">save</span><span class="params">(String name, Integer age)</span> </span>{
+  User user = <span class="keyword">new</span> User();
+  user.setName(name);
+  user.setAge(age);
+  <span class="keyword">return</span> save(user);
+}
+</code></pre>
+</li>
+</ul>
+<p>从上述示例中可以发现，我们在添加事务注解<code>@Transactional</code>的时候会额外配置<code>transactionManager</code>属性。原因是Spring容器中存在多个事务管理器配置(前面配置文件中进行配置的),在处理事务过程中，框架不知道使用哪一个，所以需要开发者明确指定。<br>在配置中也可以看出，指定一个事务管理器，而该事务管理器只会在对应数据源起作用，所以跨数据库操作事务是不会同时生效的。      </p>
+<p>以上就是Spring Boot多数据源配置的基础参考方案，需要注意的是该示例是整合的JPA。如果要整合mybatis，需要做相应的修改。     </p>
+<p><strong>代码地址:<a href="https://gitee.com/umeone/multi-datasource.git" target="_blank" rel="noopener">https://gitee.com/umeone/multi-datasource.git</a></strong></p>
+
+            <div class="post-copyright">
+    <div class="content">
+        <p>最后更新： 2019年04月03日 16:35</p>
+        <p>原始链接： <a class="post-url" href="/2019/04/03/Spring-Boot多数据源配置/" title="Spring Boot多数据源配置">http:/whucke.com/2019/04/03/Spring-Boot多数据源配置/</a></p>
+        <footer>
+            <a href="http:/whucke.com">
+                <img src="/images/logo.png" alt="Zhang Peng">
+                Zhang Peng
+            </a>
+        </footer>
+    </div>
+</div>
+
+      
+        
+            
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;">赏</a>
+</div>
+
+<div id="reward" class="post-modal reward-lay">
+    <a class="close" href="javascript:;" id="reward-close">×</a>
+    <span class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        请我吃糖~
+        <i class="icon icon-quote-right"></i>
+    </span>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/images/wechat_code.jpg" alt="打赏二维码">
+        </div>
+        <div class="reward-select">
+            
+            <label class="reward-select-item checked" data-id="wechat" data-wechat="/images/wechat_code.jpg">
+                <img class="reward-select-item-wechat" src="/images/wechat.png" alt="微信">
+            </label>
+            
+            
+            <label class="reward-select-item" data-id="alipay" data-alipay="/images/alipay_code.jpg">
+                <img class="reward-select-item-alipay" src="/images/alipay.png" alt="支付宝">
+            </label>
+            
+        </div>
+    </div>
+</div>
+
+
+        
+    </div>
+    <footer class="article-footer">
+        
+        
+<div class="post-share">
+    <a href="javascript:;" id="share-sub" class="post-share-fab">
+        <i class="fa fa-share-alt"></i>
+    </a>
+    <div class="post-share-list" id="share-list">
+        <ul class="share-icons">
+          <li>
+            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http:/whucke.com/2019/04/03/Spring-Boot多数据源配置/&title=《Spring Boot多数据源配置》 — 夜凉月微扬&pic=http:/whucke.comimages/logo.png" data-title="微博">
+              <i class="fa fa-weibo"></i>
+            </a>
+          </li>
+          <li>
+            <a class="weixin share-sns" id="wxFab" href="javascript:;" data-title="微信">
+              <i class="fa fa-weixin"></i>
+            </a>
+          </li>
+          <li>
+            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http:/whucke.com/2019/04/03/Spring-Boot多数据源配置/&title=《Spring Boot多数据源配置》 — 夜凉月微扬&source=" data-title="QQ">
+              <i class="fa fa-qq"></i>
+            </a>
+          </li>
+          <li>
+            <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http:/whucke.com/2019/04/03/Spring-Boot多数据源配置/" data-title="Facebook">
+              <i class="fa fa-facebook"></i>
+            </a>
+          </li>
+          <li>
+            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Spring Boot多数据源配置》 — 夜凉月微扬&url=http:/whucke.com/2019/04/03/Spring-Boot多数据源配置/&via=http:/whucke.com" data-title="Twitter">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+          <li>
+            <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http:/whucke.com/2019/04/03/Spring-Boot多数据源配置/" data-title="Google+">
+              <i class="fa fa-google-plus"></i>
+            </a>
+          </li>
+        </ul>
+     </div>
+</div>
+<div class="post-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;" id="wxShare-close">×</a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=http:/whucke.com/2019/04/03/Spring-Boot多数据源配置/" alt="微信分享二维码">
+</div>
+
+<div class="mask"></div>
+
+        
+        <ul class="article-footer-menu">
+            
+            
+  <li class="article-footer-tags">
+    <i class="fa fa-tags"></i>
+      
+    <a href="/tags/SpringBoot/" class="color2">Spring Boot</a>
+      
+  </li>
+
+        </ul>
+        
+    </footer>
+  </div>
+</article>
+
+
+    <aside class="post-toc-pos post-toc-top" id="post-toc">
+        <nav class="post-toc-wrap">
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Spring-Boot多数据源配置"><span class="post-toc-text">Spring Boot多数据源配置</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#一、单数据库操作示例"><span class="post-toc-text">一、单数据库操作示例</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#二、多数据源配置"><span class="post-toc-text">二、多数据源配置</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#三、事务"><span class="post-toc-text">三、事务</span></a></li></ol></li></ol>
+        </nav>
+    </aside>
+    
+
+<nav id="article-nav">
+  
+  
+    <a href="/2019/04/03/redis实现消息发布订阅/" id="article-nav-older" class="article-nav-link-wrap">
+      <span class="article-nav-title">redis实现消息发布订阅</span>
+      <i class="fa fa-hand-o-right" aria-hidden="true"></i>
+    </a>
+  
+</nav>
+
+
+
+    
+</section>
+        
+      </div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+      <p>
+        Powered by  <a href="http://hexo.io/" target="_blank">Hexo</a>
+        Theme <a href="//github.com/wongminho/hexo-theme-miho" target="_blank">MiHo</a>
+      &copy; 2019 Zhang Peng<br>
+      </p>
+    </div>
+  </div>
+</footer>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script>
+  var mihoConfig = {
+      root: "http:/whucke.com",
+      animate: true,
+      isHome: false,
+      share: true,
+      reward: 1
+  }
+</script>
+<div class="sidebar">
+    <div id="sidebar-search" title="Search">
+        <i class="fa fa-search"></i>
+    </div>
+    <div id="sidebar-category" title="Categories">
+        <i class="fa fa-book"></i>
+    </div>
+    <div id="sidebar-tag" title="Tags">
+        <i class="fa fa-tags"></i>
+    </div>
+    <div id="sidebar-top">
+        <span class="sidebar-top-icon"><i class="fa fa-angle-up"></i></span>
+    </div>
+</div>
+<div class="sidebar-menu-box" id="sidebar-menu-box">
+    <div class="sidebar-menu-box-container">
+        <div id="sidebar-menu-box-categories">
+            
+        </div>
+        <div id="sidebar-menu-box-tags">
+            <a href="/tags/Redis/" style="font-size: 10px;">Redis</a> <a href="/tags/Spring-Boot/" style="font-size: 10px;">Spring Boot</a>
+        </div>
+    </div>
+    <a href="javascript:;" class="sidebar-menu-box-close">&times;</a>
+</div>
+<div class="mobile-header-menu-nav" id="mobile-header-menu-nav">
+    <div class="mobile-header-menu-container">
+        <span class="title">Menus</span>
+        <ul class="mobile-header-menu-navbar">
+            
+            <li>
+                <a href="/">
+                    <i class="fa fa-home"></i><span>首页</span>
+                </a>
+            </li>
+            
+            <li>
+                <a href="/archives">
+                    <i class="fa fa-archive"></i><span>档案</span>
+                </a>
+            </li>
+            
+            <li>
+                <a href="/about">
+                    <i class="fa fa-user"></i><span>About</span>
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+    <div class="mobile-header-tag-container">
+        <span class="title">Tags</span>
+        <div id="mobile-header-container-tags">
+            <a href="/tags/Redis/" style="font-size: 10px;">Redis</a> <a href="/tags/Spring-Boot/" style="font-size: 10px;">Spring Boot</a>
+        </div>
+    </div>
+</div>
+<div class="search-wrap">
+    <span class="search-close">&times;</span>
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+            <i class="icon icon-lg icon-chevron-left"></i>
+        </a>
+        <input class="search-field" placeholder="Search..." id="keywords">
+        <a id="search-submit" href="javascript:;">
+            <i class="fa fa-search"></i>
+        </a>
+    <div class="search-container" id="search-container">
+        <ul class="search-result" id="search-result">
+        </ul>
+    </div>
+</div>
+
+<div id="search-tpl">
+    <li class="search-result-item">
+        <a href="{url}" class="search-item-li">
+            <span class="search-item-li-title" title="{title}">{title}</span>
+        </a>
+    </li>
+</div>
+<script src="/js/search.js"></script>
+<script src="/js/main.js"></script>
+
+
+  <script src="//cdn.bootcss.com/particles.js/2.0.0/particles.min.js"></script>
+  <div id="particles"></div>
+  <script src="/js/particles.js"></script>
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+  <script src="//cdn.bootcss.com/scrollReveal.js/3.0.5/scrollreveal.js"></script>
+  <script src="/js/animate.js"></script>
+
+
+  <script src="/js/pop-img.js"></script>
+  <script>
+     $(".article-entry p img").popImg();
+  </script>
+
+  </div>
+</body>
+</html>
